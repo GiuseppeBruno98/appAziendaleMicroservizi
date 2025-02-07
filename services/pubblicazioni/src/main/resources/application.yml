@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: pubblicazioni-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pubblicazioni #utenti, posizione lavorativa e dipartimento
+    username: pippo
+    password: pluto
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+server:
+  port: 8071
+
+application:
+  config:
+    utenti-url: http://localhost:8070/app/v1/utenti

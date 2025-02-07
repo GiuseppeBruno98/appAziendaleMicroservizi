@@ -1,0 +1,83 @@
+services:
+  postgresql:
+    container_name: PostgresAppAziendale
+    image: postgres
+    environment:
+      POSTGRES_USER: pippo
+      POSTGRES_PASSWORD: pluto
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - networkAziendale
+
+  mongodb:
+    container_name: MongoAppAziendale
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pippo
+      MONGO_INITDB_ROOT_PASSWORD: pluto
+    volumes:
+      - mongo:/data/db
+      - mongo_config:/data/configdb
+    ports:
+      - "27017:27017"
+    networks:
+      - networkAziendale
+
+  mongo-express:
+    container_name: Mongo_express_AppAziendale
+    image: mongo-express:latest
+    depends_on:
+      - mongodb
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: pippo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pluto
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: utente
+      ME_CONFIG_BASICAUTH_PASSWORD: mypassword
+    ports:
+      - "8081:8081"
+    networks:
+      - networkAziendale
+
+  zookeeper:   #server virtuale sul quale runna kafka
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper_AppAziendale
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - networkAziendale
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka_AppAziendale
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+    networks:
+      - networkAziendale
+
+
+networks:
+  networkAziendale:
+    driver: bridge
+
+volumes:
+  postgres:
+  mongo:
+  mongo_config:
