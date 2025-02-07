@@ -45,7 +45,7 @@ public class ComunicazioneAziendaleController {
 
     @PostMapping("/create")
     public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
-        return new ResponseEntity<>(comunicazioneAziendaleService.createComunicazione(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(comunicazioneAziendaleService.create(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")

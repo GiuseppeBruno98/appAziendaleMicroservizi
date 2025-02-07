@@ -21,5 +21,4 @@ server:
 application:
   config:
     utenti-url: http://localhost:8070/app/v1/utenti
-    prodotti-url: http://localhost:8071/app/v1/prodotti
-    payment-url: http://localhost:8073/app/v1/payments
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale

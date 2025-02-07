@@ -54,10 +54,8 @@ public class ComunicazioneAziendaleService {
                 .toList();
     }
 
-    public EntityIdResponse createComunicazione(CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
-        System.out.println("aooooooo");
+    public EntityIdResponse create(CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
-        System.out.println("aooooooo");
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
         return new EntityIdResponse(savedComunicazione.getId());
     }

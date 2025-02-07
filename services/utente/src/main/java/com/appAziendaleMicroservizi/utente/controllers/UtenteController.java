@@ -1,5 +1,6 @@
 package com.appAziendaleMicroservizi.utente.controllers;
 
+import com.appAziendaleMicroservizi.utente.domains.dto.requests.CreateComunicazioneAziendaleRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.requests.CreateUtenteRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.requests.UpdateUtenteRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.responses.EntityIdResponse;
@@ -51,6 +52,11 @@ public class UtenteController {
     @PutMapping("/update/{id}")
     public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUtenteRequest request) throws MyEntityNotFoundException {
         return new ResponseEntity<>(utenteService.updateUtente(id, request), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/createComunicazioneAziendale")
+    public ResponseEntity<EntityIdResponse> createComunicazioneAziendale(@RequestBody @Valid CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+        return new ResponseEntity<>(utenteService.createComunicazioneAziendale(request), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,6 +1,7 @@
 package com.appAziendaleMicroservizi.utente.services;
 
 
+import com.appAziendaleMicroservizi.utente.domains.dto.requests.CreateComunicazioneAziendaleRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.requests.CreateUtenteRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.requests.UpdateUtenteRequest;
 import com.appAziendaleMicroservizi.utente.domains.dto.responses.EntityIdResponse;
@@ -9,11 +10,13 @@ import com.appAziendaleMicroservizi.utente.domains.entities.Utente;
 import com.appAziendaleMicroservizi.utente.exceptions.MyEntityNotFoundException;
 import com.appAziendaleMicroservizi.utente.mappers.UtenteMapper;
 import com.appAziendaleMicroservizi.utente.repositories.UtenteRepository;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtenteService {
@@ -27,6 +30,8 @@ public class UtenteService {
     @Autowired
     private PosizioneLavorativaService posizioneLavorativaService;
 
+    @Autowired
+    private ComunicazioneAziendaleClient comunicazioneAziendaleClient;
 
     public Utente getById(Long id) throws MyEntityNotFoundException {
         return utenteRepository
@@ -72,6 +77,11 @@ public class UtenteService {
     public EntityIdResponse createUtente(CreateUtenteRequest request) throws MyEntityNotFoundException {
         Utente utenteSaved = utenteRepository.save(utenteMapper.fromCreateUtenteRequest(request));
         return new EntityIdResponse(utenteSaved.getId());
+    }
+
+    public EntityIdResponse createComunicazioneAziendale(@Valid CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+        Utente utenteSaved = getById(request.creatorId());
+        return comunicazioneAziendaleClient.createComunicazioneAziendale(request);
     }
 
     public void insertUtente(Utente utente) {
