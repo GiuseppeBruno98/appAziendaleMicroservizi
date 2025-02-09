@@ -5,6 +5,6 @@
     <file url="file://$PROJECT_DIR$/services/discovery/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/pubblicazioni/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/timbri/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/services/utente/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/utenti/src/main/java" charset="UTF-8" />
   </component>
 </project>

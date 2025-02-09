@@ -10,18 +10,29 @@
         <module name="config-server" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for utente" enabled="true">
+      <profile name="Annotation profile for pubblicazioni" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="pubblicazioni" />
+      </profile>
+      <profile name="Annotation profile for timbri" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
-        <module name="utente" />
         <module name="timbri" />
-        <module name="pubblicazioni" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="utenti" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -29,7 +40,7 @@
       <module name="discovery" options="-parameters" />
       <module name="pubblicazioni" options="-parameters" />
       <module name="timbri" options="-parameters" />
-      <module name="utente" options="-parameters" />
+      <module name="utenti" options="-parameters" />
     </option>
   </component>
 </project>
