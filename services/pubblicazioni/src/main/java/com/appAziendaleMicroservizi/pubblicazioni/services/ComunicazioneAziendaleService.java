@@ -25,6 +25,8 @@ public class ComunicazioneAziendaleService {
     @Autowired
     private UtenteClient utenteClient;
 
+    @Autowired UtenteClient2 utenteClient2;
+
     public ComunicazioneAziendale getById(Long id) throws MyEntityNotFoundException {
         return comunicazioneAziendaleRepository
                 .findById(id)
@@ -56,6 +58,7 @@ public class ComunicazioneAziendaleService {
 
     public EntityIdResponse create(CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
+        var utente2 = utenteClient2.getUtenteResponseById(request.creatorId());
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
         return new EntityIdResponse(savedComunicazione.getId());
     }
