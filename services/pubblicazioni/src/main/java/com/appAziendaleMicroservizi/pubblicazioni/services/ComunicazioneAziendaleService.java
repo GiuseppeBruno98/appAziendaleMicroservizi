@@ -6,11 +6,14 @@ import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.Comunica
 import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.EntityIdResponse;
 import com.appAziendaleMicroservizi.pubblicazioni.domains.entities.ComunicazioneAziendale;
 import com.appAziendaleMicroservizi.pubblicazioni.exceptions.MyEntityNotFoundException;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneProducer;
 import com.appAziendaleMicroservizi.pubblicazioni.mappers.ComunicazioneAziendaleMapper;
 import com.appAziendaleMicroservizi.pubblicazioni.repositories.ComunicazioneAziendaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,7 +28,11 @@ public class ComunicazioneAziendaleService {
     @Autowired
     private UtenteClient utenteClient;
 
-    @Autowired UtenteClient2 utenteClient2;
+    @Autowired
+    private UtenteClient2 utenteClient2;
+
+    @Autowired
+    private PubblicazioneProducer pubblicazioneProducer;
 
     public ComunicazioneAziendale getById(Long id) throws MyEntityNotFoundException {
         return comunicazioneAziendaleRepository
@@ -60,6 +67,15 @@ public class ComunicazioneAziendaleService {
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
         var utente2 = utenteClient2.getUtenteResponseById(request.creatorId());
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
+
+        pubblicazioneProducer.sendConfermaPubblicazione(PubblicazioneConfirmation
+                .builder()
+                .id(savedComunicazione.getId())
+                .titolo(savedComunicazione.getTitolo())
+                .contenuto(savedComunicazione.getContenuto())
+                .timestamp(LocalDateTime.now())
+                .build());
+
         return new EntityIdResponse(savedComunicazione.getId());
     }
 
