@@ -27,7 +27,7 @@ public class UtenteClient2 {
                 new ParameterizedTypeReference<>() {};
         ResponseEntity<UtenteResponse> responseEntity = restTemplate.exchange
                 (utentiUrl + "/getResponse/"+ id,
-                        HttpMethod.POST, requestEntity, responseType);
+                        HttpMethod.GET, requestEntity, responseType);
         if (responseEntity.getStatusCode().isError()) throw new EntityNotFoundException("Qualcosa è andato storto nel trovare l'utente");
         return responseEntity.getBody();
     }

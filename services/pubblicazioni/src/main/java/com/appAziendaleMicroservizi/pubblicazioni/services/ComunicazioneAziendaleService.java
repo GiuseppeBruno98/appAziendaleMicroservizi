@@ -74,7 +74,8 @@ public class ComunicazioneAziendaleService {
                 .titolo(savedComunicazione.getTitolo())
                 .contenuto(savedComunicazione.getContenuto())
                 .timestamp(LocalDateTime.now())
-                .build());
+                .build()
+        );
 
         return new EntityIdResponse(savedComunicazione.getId());
     }
