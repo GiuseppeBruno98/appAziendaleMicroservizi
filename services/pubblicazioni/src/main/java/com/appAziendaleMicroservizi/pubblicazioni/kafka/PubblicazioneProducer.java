@@ -16,7 +16,7 @@ public class PubblicazioneProducer {
     public void sendConfermaPubblicazione(PubblicazioneConfirmation pubblicazioneConfirmation) {
         Message<PubblicazioneConfirmation> message = MessageBuilder
                 .withPayload(pubblicazioneConfirmation)
-                .setHeader(KafkaHeaders.TOPIC, "order-topic")
+                .setHeader(KafkaHeaders.TOPIC, "pubblicazione-topic")
                 .build();
         kafkaTemplate.send(message);
     }
