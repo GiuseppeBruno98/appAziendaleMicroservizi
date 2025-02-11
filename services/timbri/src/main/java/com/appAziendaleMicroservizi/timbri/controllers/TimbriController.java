@@ -26,9 +26,9 @@ public class TimbriController {
         return new ResponseEntity<>(timbriService.getByIdWithResponse(id), HttpStatus.OK);
     }
 
-    /*@GetMapping("/getByidUtente/{id}")
+    @GetMapping("/getByidUtente/{id}")
     public ResponseEntity<List<TimbriResponse>> getByIdUtente(@PathVariable Long id) throws MyEntityNotFoundException {
-        return new ResponseEntity<>(timbriService.getResponseByIdUtente(id), HttpStatus.OK);
+        return new ResponseEntity<>(timbriService.getAllResponseByIdUtente(id), HttpStatus.OK);
     }
 
     @PostMapping("/inizio")
@@ -38,7 +38,7 @@ public class TimbriController {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
-    }*/
+    }
 
 
     @GetMapping("/all")
@@ -53,7 +53,7 @@ public class TimbriController {
                 new GenericResponse("timbro con id " + id + " eliminato correttamente"), HttpStatus.OK);
     }
 
-    /*@PutMapping("/inizioPausa/{idUtente}")
+    @PutMapping("/inizioPausa/{idUtente}")
     public ResponseEntity<?> inizioPausa(@PathVariable Long idUtente) throws MyEntityNotFoundException {
         Object result = timbriService.inizioPausa(idUtente);
         if (result.getClass() == GenericResponse.class) {
@@ -61,6 +61,7 @@ public class TimbriController {
         }
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
+
     @PutMapping("/finePausa/{idUtente}")
     public ResponseEntity<?> finePausa(@PathVariable Long idUtente) throws MyEntityNotFoundException {
         Object result = timbriService.finePausa(idUtente);
@@ -69,10 +70,11 @@ public class TimbriController {
         }
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
+
     @PutMapping("/fine/{idUtente}")
     public ResponseEntity<?> fine(@PathVariable Long idUtente) throws MyEntityNotFoundException {
         return new ResponseEntity<>(timbriService.fine(idUtente), HttpStatus.CREATED);
-    }*/
+    }
 
 
 }

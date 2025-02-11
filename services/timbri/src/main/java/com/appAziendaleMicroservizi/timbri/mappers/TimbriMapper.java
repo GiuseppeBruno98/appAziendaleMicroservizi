@@ -18,11 +18,11 @@ public class TimbriMapper {
     UtenteService utenteService ;*/
 
 
-    public Timbri fromCreateTimbriRequest(CreateTimbriRequest request/*, Utente utente*/) throws MyEntityNotFoundException {
+    public Timbri fromCreateTimbriRequest(CreateTimbriRequest request) throws MyEntityNotFoundException {
 
         return Timbri
                 .builder()
-                //.utenteId(utente) // Passa l'oggetto Utente
+                .utenteId(request.utenteId()) // Passa l'oggetto Utente
                 .oraInizio(LocalDateTime.now()) // Imposta l'ora di inizio
                 .build();
     }
@@ -31,7 +31,7 @@ public class TimbriMapper {
     public TimbriResponse toTimbriResponse(Timbri request) throws MyEntityNotFoundException {
         return TimbriResponse
                 .builder()
-                //.utenteId(request.getUtenteId().getId())
+                .utenteId(request.getUtenteId())
                 .oraInzio(request.getOraInizio())
                 .oraFine(request.getOraFine())
                 .inizioPausa(request.getInizioPausa())

@@ -17,3 +17,8 @@ spring:
 
 server:
   port: 8072
+
+application:
+  config:
+    utenti-url: http://localhost:8070/app/v1/utenti
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale

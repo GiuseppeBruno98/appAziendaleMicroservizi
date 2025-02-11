@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public record CreateTimbriRequest(
 
     @NotNull(message = "L'utente deve essere presente")
-    EntityIdResponse utenteId
+    Long utenteId
 
     ){
 

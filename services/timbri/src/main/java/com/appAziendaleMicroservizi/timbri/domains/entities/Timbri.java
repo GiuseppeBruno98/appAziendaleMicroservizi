@@ -23,9 +23,8 @@ public class Timbri {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@JoinColumn(name = "utente_id")
-    @ManyToOne(optional = false)
-    private Utente utenteId;*/
+
+    private Long utenteId;
 
     @Column(nullable = false)
     private LocalDateTime oraInizio;

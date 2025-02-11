@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface TimbriRepository extends JpaRepository<Timbri, Long>{
 
-    //List<Timbri> findByUtenteId(Utente utenteId);
+    List<Timbri> findByUtenteId(Long utenteId);
 }
