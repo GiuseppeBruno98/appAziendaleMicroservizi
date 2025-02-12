@@ -79,6 +79,16 @@ services:
     networks:
       - networkAziendale
 
+  mail-dev:
+    container_name: mail_AppAziendale
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - networkAziendale
+
+
 networks:
   networkAziendale:
     driver: bridge

@@ -15,6 +15,16 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
+  kafka:
+    producer:
+      bootstrap-server: localhost:9092
+      group-id: order-group
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: orderConfirmation:com.sosu.ordini.kafka.OrderConfirmation
+
+
 server:
   port: 8071
 
