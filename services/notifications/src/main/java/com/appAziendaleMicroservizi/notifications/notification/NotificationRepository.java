@@ -1,4 +1,4 @@
-package com.sosu.notifications.notification;
+package com.appAziendaleMicroservizi.notifications.notification;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

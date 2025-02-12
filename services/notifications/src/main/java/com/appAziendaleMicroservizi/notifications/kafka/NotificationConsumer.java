@@ -1,9 +1,9 @@
-package com.sosu.notifications.kafka;
+package com.appAziendaleMicroservizi.notifications.kafka;
 
-import com.sosu.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
-import com.sosu.notifications.notification.Notification;
-import com.sosu.notifications.notification.NotificationRepository;
-import com.sosu.notifications.notification.NotificationType;
+import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.notifications.notification.Notification;
+import com.appAziendaleMicroservizi.notifications.notification.NotificationRepository;
+import com.appAziendaleMicroservizi.notifications.notification.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

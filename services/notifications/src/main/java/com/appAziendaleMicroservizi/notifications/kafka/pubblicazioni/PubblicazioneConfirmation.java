@@ -1,4 +1,4 @@
-package com.sosu.notifications.kafka.pubblicazioni;
+package com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni;
 
 import com.sosu.notifications.kafka.payment.PaymentMethod;
 import lombok.Builder;

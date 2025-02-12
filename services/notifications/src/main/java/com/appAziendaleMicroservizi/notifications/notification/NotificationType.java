@@ -1,4 +1,4 @@
-package com.sosu.notifications.notification;
+package com.appAziendaleMicroservizi.notifications.notification;
 
 public enum NotificationType {
 

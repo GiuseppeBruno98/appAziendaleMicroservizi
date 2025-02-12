@@ -1,4 +1,4 @@
-package com.sosu.notifications;
+package com.appAziendaleMicroservizi.notifications;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

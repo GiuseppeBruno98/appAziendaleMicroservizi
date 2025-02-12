@@ -1,6 +1,6 @@
-package com.sosu.notifications.notification;
+package com.appAziendaleMicroservizi.notifications.notification;
 
-import com.sosu.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
