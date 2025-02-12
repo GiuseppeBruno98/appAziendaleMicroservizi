@@ -10,7 +10,7 @@
         <module name="config-server" />
         <module name="discovery" />
       </profile>
-      <profile name="Annotation profile for utente" enabled="true">
+      <profile name="Annotation profile for notifications" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -20,6 +20,7 @@
         <module name="utenti" />
         <module name="timbri" />
         <module name="pubblicazioni" />
+        <module name="notifications" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -30,6 +31,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />
+      <module name="notifications" options="-parameters" />
       <module name="pubblicazioni" options="-parameters" />
       <module name="timbri" options="-parameters" />
       <module name="utenti" options="-parameters" />

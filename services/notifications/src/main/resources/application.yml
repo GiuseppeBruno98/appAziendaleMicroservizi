@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: notifications-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  data:
+    mongodb:
+      username: pippo
+      password: pluto
+      host: localhost
+      port: 27017
+      database: notifications
+      authentication-database: admin
+
+  kafka:
+    consumer:
+      bootstrap-server: localhost:9092
+      group-id: order-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.data.mapping: orderConfirmation:com.sosu.notifications.kafka.orders.OrderConfirmation
+
+  mail:
+    host: localhost
+    port: 1080
+    username: pippo
+    password: pluto
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enabled: true
+        connectiontimeout: 5000
+        timeout: 3000
+
+
