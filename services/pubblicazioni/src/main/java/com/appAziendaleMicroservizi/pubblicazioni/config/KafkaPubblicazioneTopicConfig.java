@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class KafkaOrderTopicConfig {
+public class KafkaPubblicazioneTopicConfig {
 
     @Bean
-    public NewTopic orderTopic() {
+    public NewTopic pubblicazioneTopic() {
         return TopicBuilder
                 .name("pubblicazione-topic")
                 .build();

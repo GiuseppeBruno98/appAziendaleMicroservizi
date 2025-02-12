@@ -18,6 +18,7 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "pubblicazione-topic")
     public void consumePubblicazioneNotification(PubblicazioneConfirmation pubblicazioneConfirmation) {
+        System.out.println("ciao");
         notificationRepository.save(
                 Notification
                         .builder()
@@ -26,6 +27,6 @@ public class NotificationConsumer {
                         .pubblicazioneConfirmation(pubblicazioneConfirmation)
                         .build()
         );
-        // TODO inviare la email di conferma dell'ordine
+        // TODO inviare la email di conferma pubblicazione
     }
 }

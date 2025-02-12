@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record PubblicazioneConfirmation(
-        Long id,
+        String id,
         String titolo,
         String contenuto,
         LocalDateTime timestamp

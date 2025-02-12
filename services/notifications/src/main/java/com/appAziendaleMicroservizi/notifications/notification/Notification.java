@@ -21,8 +21,11 @@ public class Notification {
 
     @Id
     private String id;
+
     private LocalDateTime notificationTime;
+
     private PubblicazioneConfirmation pubblicazioneConfirmation;
+
     private NotificationType notificationType;
 
 }

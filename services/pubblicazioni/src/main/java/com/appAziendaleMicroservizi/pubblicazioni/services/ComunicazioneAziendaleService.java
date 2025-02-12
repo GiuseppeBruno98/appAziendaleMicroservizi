@@ -67,10 +67,9 @@ public class ComunicazioneAziendaleService {
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
         var utente2 = utenteClient2.getUtenteResponseById(request.creatorId());
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
-
         pubblicazioneProducer.sendConfermaPubblicazione(PubblicazioneConfirmation
                 .builder()
-                .id(savedComunicazione.getId())
+                .id(savedComunicazione.getId().toString())
                 .titolo(savedComunicazione.getTitolo())
                 .contenuto(savedComunicazione.getContenuto())
                 .timestamp(LocalDateTime.now())
