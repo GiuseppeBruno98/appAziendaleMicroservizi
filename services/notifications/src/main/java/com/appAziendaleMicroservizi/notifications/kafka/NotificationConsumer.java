@@ -16,7 +16,7 @@ public class NotificationConsumer {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @KafkaListener(topics = "pubblicazione-topic")
+    @KafkaListener(topics = "pubblicazione-topic", groupId = "pubblicazioni-group")
     public void consumePubblicazioneNotification(PubblicazioneConfirmation pubblicazioneConfirmation) {
         System.out.println("ciao");
         notificationRepository.save(

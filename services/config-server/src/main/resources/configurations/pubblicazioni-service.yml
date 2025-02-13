@@ -11,5 +11,20 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
+  kafka:
+    producer:
+      bootstrap-server: localhost:9092
+      group-id: pubblicazioni-group
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: pubblicazioneConfirmation:com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneConfirmation
+
 server:
   port: 8071
+
+
+application:
+  config:
+    utenti-url: http://localhost:8070/app/v1/utenti
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale

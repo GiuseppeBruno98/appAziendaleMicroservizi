@@ -20,8 +20,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: '*'
-        spring.json.data.mapping: pubblicazioneConfirmation:com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: pubblicazioneConfirmation:com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation
 
   mail:
     host: localhost

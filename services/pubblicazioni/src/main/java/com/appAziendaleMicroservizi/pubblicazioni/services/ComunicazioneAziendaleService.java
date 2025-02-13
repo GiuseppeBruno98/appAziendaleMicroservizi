@@ -69,7 +69,7 @@ public class ComunicazioneAziendaleService {
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
         pubblicazioneProducer.sendConfermaPubblicazione(PubblicazioneConfirmation
                 .builder()
-                .id(savedComunicazione.getId().toString())
+                .id(savedComunicazione.getId())
                 .titolo(savedComunicazione.getTitolo())
                 .contenuto(savedComunicazione.getContenuto())
                 .timestamp(LocalDateTime.now())
