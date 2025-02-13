@@ -23,6 +23,6 @@ public record UpdateUtenteRequest(
 
         String imgUtente,
 
-        EntityIdRequest idPosizioneLavorativa
+        Long idPosizioneLavorativa
 ) {
 }

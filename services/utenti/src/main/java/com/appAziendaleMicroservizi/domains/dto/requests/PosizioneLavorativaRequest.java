@@ -12,7 +12,7 @@ public record PosizioneLavorativaRequest(
         String descrizione,
 
         @NotNull(message = "L'id del dipartimento deve essere presente")
-        EntityIdRequest idDipartimento
+        Long idDipartimento
 ) {
 
 }

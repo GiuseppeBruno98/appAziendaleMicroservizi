@@ -96,7 +96,7 @@ public class UtenteService {
         if (request.telefono() != null) myUtente.setTelefono(request.telefono());
         if (request.imgUtente() != null) myUtente.setImgUtente(request.imgUtente());
         if (request.idPosizioneLavorativa() != null) {
-            myUtente.setIdPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa().id()));
+            myUtente.setIdPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa()));
         }
         return new EntityIdResponse(utenteRepository.save(myUtente).getId());
     }

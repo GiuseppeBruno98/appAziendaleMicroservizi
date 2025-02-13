@@ -30,7 +30,7 @@ public class UtenteMapper {
                 .indirizzo(request.indirizzo())
                 .ruolo(Role.UTENTE)
                 .imgUtente(request.imgUtente())
-                .idPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa().id()))
+                .idPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa()))
                 .build();
     }
 

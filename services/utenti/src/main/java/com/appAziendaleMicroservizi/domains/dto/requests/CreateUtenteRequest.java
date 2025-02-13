@@ -40,6 +40,6 @@ public record CreateUtenteRequest(
         String imgUtente,
 
         @NotNull(message = "La posizione lavorativa deve essere presente")
-        EntityIdRequest idPosizioneLavorativa
+        Long idPosizioneLavorativa
 ) {
 }

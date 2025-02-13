@@ -19,7 +19,7 @@ public class PosizioneLavorativaMapper {
                 .builder()
                 .nome(request.nome())
                 .descrizione(request.descrizione())
-                .idDipartimento(dipartimentoService.getById(request.idDipartimento().id()))
+                .idDipartimento(dipartimentoService.getById(request.idDipartimento()))
                 .build();
     }
 

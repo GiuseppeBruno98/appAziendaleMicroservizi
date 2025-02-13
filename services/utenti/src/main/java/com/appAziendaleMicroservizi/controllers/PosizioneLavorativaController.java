@@ -29,7 +29,7 @@ public class PosizioneLavorativaController {
         return new ResponseEntity<>(posizioneLavorativaService.getById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/getresponse/{id}")
+    @GetMapping("/getResponse/{id}")
     public ResponseEntity<PosizioneLavorativaResponse> getByIdWithResponse(@PathVariable Long id) throws MyEntityNotFoundException {
         return new ResponseEntity<>(posizioneLavorativaService.getByIdWithResponse(id), HttpStatus.OK);
     }

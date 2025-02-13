@@ -62,7 +62,7 @@ public class PosizioneLavorativaService {
         if (request.nome() != null) myPosizioneLavorativa.setNome(request.nome());
         if (request.descrizione()!= null) myPosizioneLavorativa.setDescrizione(request.descrizione());
         if (request.idDipartimento() != null) {
-            myPosizioneLavorativa.setIdDipartimento(dipartimentoService.getById(request.idDipartimento().id()));
+            myPosizioneLavorativa.setIdDipartimento(dipartimentoService.getById(request.idDipartimento()));
         }
         return new EntityIdResponse(posizioneLavorativaRepository.save(myPosizioneLavorativa).getId());
     }
