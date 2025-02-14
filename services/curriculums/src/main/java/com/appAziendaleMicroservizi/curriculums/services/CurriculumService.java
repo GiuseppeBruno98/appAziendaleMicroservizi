@@ -59,9 +59,7 @@ public class CurriculumService {
         return new EntityIdResponse(newCurriculum.getId());
     }
 
-    /**
-     * Gestisce l'upload del curriculum per un utente.
-     */
+    //Gestisce l'upload del curriculum per un utente.
     public Curriculum uploadCurriculum(Long idUtente, MultipartFile file) throws IOException {
         // Crea la directory di upload se non esiste
         Path uploadPath = Paths.get(uploadDir);
