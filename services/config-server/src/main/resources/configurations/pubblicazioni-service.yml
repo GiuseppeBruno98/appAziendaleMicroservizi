@@ -18,7 +18,8 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.type.mapping: pubblicazioneConfirmation:com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneConfirmation
+        spring.json.type.mapping: comunicazioneAziendaleConfirmation:com.appAziendaleMicroservizi.pubblicazioni.kafka.ComunicazioneAziendaleConfirmation,
+                                  newsConfirmation:com.appAziendaleMicroservizi.pubblicazioni.kafka.NewsConfirmation
 
 server:
   port: 8071
@@ -27,4 +28,6 @@ server:
 application:
   config:
     utenti-url: http://localhost:8070/app/v1/utenti
+    posizioniLavorative-url: http://localhost:8070/app/v1/posizioneLavorativa
     comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
+    news-url: http://localhost:8071/app/v1/news

@@ -6,7 +6,7 @@ import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.Comunica
 import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.EntityIdResponse;
 import com.appAziendaleMicroservizi.pubblicazioni.domains.entities.ComunicazioneAziendale;
 import com.appAziendaleMicroservizi.pubblicazioni.exceptions.MyEntityNotFoundException;
-import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.ComunicazioneAziendaleConfirmation;
 import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneProducer;
 import com.appAziendaleMicroservizi.pubblicazioni.mappers.ComunicazioneAziendaleMapper;
 import com.appAziendaleMicroservizi.pubblicazioni.repositories.ComunicazioneAziendaleRepository;
@@ -67,7 +67,7 @@ public class ComunicazioneAziendaleService {
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
         var utente2 = utenteClient2.getUtenteResponseById(request.creatorId());
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
-        pubblicazioneProducer.sendConfermaPubblicazione(PubblicazioneConfirmation
+        pubblicazioneProducer.sendConfermaPubblicazioneComunicazioneAziendale(ComunicazioneAziendaleConfirmation
                 .builder()
                 .id(savedComunicazione.getId())
                 .titolo(savedComunicazione.getTitolo())
@@ -79,7 +79,7 @@ public class ComunicazioneAziendaleService {
         return new EntityIdResponse(savedComunicazione.getId());
     }
 
-    public EntityIdResponse updateComunicazione(Long id, UpdateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse update(Long id, UpdateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
         ComunicazioneAziendale comunicazione = getById(id);
         if (request.titolo() != null) comunicazione.setTitolo(request.titolo());
         if (request.contenuto() != null) comunicazione.setContenuto(request.contenuto());

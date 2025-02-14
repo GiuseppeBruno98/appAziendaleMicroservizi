@@ -45,12 +45,12 @@ public class NewsController {
 
     @PostMapping("/create")
     public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateNewsRequest request) throws MyEntityNotFoundException, IllegalAccessException {
-        return new ResponseEntity<>(newsService.createNews(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(newsService.create(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateNewsRequest request) throws MyEntityNotFoundException {
-        return new ResponseEntity<>(newsService.updateNews(id, request), HttpStatus.OK);
+        return new ResponseEntity<>(newsService.update(id, request), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

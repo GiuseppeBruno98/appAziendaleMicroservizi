@@ -1,9 +1,8 @@
 package com.appAziendaleMicroservizi.notifications.kafka;
 
-import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
-import com.appAziendaleMicroservizi.notifications.notification.Notification;
-import com.appAziendaleMicroservizi.notifications.notification.NotificationRepository;
-import com.appAziendaleMicroservizi.notifications.notification.NotificationType;
+import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.ComunicazioneAziendaleConfirmation;
+import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.NewsConfirmation;
+import com.appAziendaleMicroservizi.notifications.notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -14,17 +13,32 @@ import java.time.LocalDateTime;
 public class NotificationConsumer {
 
     @Autowired
-    private NotificationRepository notificationRepository;
+    private NotificationComunicazioneAziendaleRepository notificationComunicazioneAziendaleRepository;
 
-    @KafkaListener(topics = "pubblicazione-topic", groupId = "pubblicazioni-group")
-    public void consumePubblicazioneNotification(PubblicazioneConfirmation pubblicazioneConfirmation) {
-        System.out.println("ciao");
-        notificationRepository.save(
-                Notification
+    @Autowired
+    private NotificationNewsRepository notificationNewsRepository;
+
+    @KafkaListener(topics = "comunicazioneAziendale-topic", groupId = "pubblicazioni-group")
+    public void consumePubblicazioneComunicazioneAziendaleNotification(ComunicazioneAziendaleConfirmation comunicazioneAziendaleConfirmation) {
+        notificationComunicazioneAziendaleRepository.save(
+                NotificationComunicazioneAziendale
                         .builder()
-                        .notificationType(NotificationType.PUBBLICAZIONE_NOTIFICATION)
+                        .notificationType(NotificationType.COMUNICAZIONE_AZIENDALE_NOTIFICATION)
                         .notificationTime(LocalDateTime.now())
-                        .pubblicazioneConfirmation(pubblicazioneConfirmation)
+                        .comunicazioneAziendaleConfirmation(comunicazioneAziendaleConfirmation)
+                        .build()
+        );
+        // TODO inviare la email di conferma pubblicazione
+    }
+
+    @KafkaListener(topics = "news-topic", groupId = "pubblicazioni-group")
+    public void consumePubblicazioneNewsNotification(NewsConfirmation newsConfirmation) {
+        notificationNewsRepository.save(
+                NotificationNews
+                        .builder()
+                        .notificationType(NotificationType.NEWS_NOTIFICATION)
+                        .notificationTime(LocalDateTime.now())
+                        .newsConfirmation(newsConfirmation)
                         .build()
         );
         // TODO inviare la email di conferma pubblicazione

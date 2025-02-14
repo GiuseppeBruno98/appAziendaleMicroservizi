@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record PubblicazioneConfirmation(
+public record ComunicazioneAziendaleConfirmation(
         Long id,
         String titolo,
         String contenuto,

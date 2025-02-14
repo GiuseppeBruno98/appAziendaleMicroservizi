@@ -50,7 +50,7 @@ public class ComunicazioneAziendaleController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
-        return new ResponseEntity<>(comunicazioneAziendaleService.updateComunicazione(id, request), HttpStatus.OK);
+        return new ResponseEntity<>(comunicazioneAziendaleService.update(id, request), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

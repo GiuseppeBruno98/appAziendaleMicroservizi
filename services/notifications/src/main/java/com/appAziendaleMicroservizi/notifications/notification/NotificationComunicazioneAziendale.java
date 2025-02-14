@@ -1,6 +1,6 @@
 package com.appAziendaleMicroservizi.notifications.notification;
 
-import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.notifications.kafka.pubblicazioni.ComunicazioneAziendaleConfirmation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +17,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Document
-public class Notification {
+public class NotificationComunicazioneAziendale {
 
     @Id
     private String id;
 
     private LocalDateTime notificationTime;
 
-    private PubblicazioneConfirmation pubblicazioneConfirmation;
+    private ComunicazioneAziendaleConfirmation comunicazioneAziendaleConfirmation;
 
     private NotificationType notificationType;
 

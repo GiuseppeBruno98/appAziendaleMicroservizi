@@ -1,6 +1,6 @@
 package com.appAziendaleMicroservizi.pubblicazioni;
 
-import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneConfirmation;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.ComunicazioneAziendaleConfirmation;
 import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneProducer;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,21 +21,21 @@ import static org.mockito.Mockito.verify;
 class PubblicazioniApplicationTests {
 
 	@Mock
-	private KafkaTemplate<String, PubblicazioneConfirmation> kafkaTemplate;
+	private KafkaTemplate<String, ComunicazioneAziendaleConfirmation> kafkaTemplate;
 
 	@InjectMocks
 	private PubblicazioneProducer pubblicazioneProducer;
 
 	@Test
 	void testpippo(){
-		PubblicazioneConfirmation pubblicazioneConfirmation= PubblicazioneConfirmation
+		ComunicazioneAziendaleConfirmation pubblicazioneConfirmation= ComunicazioneAziendaleConfirmation
 				.builder()
 				.id("5")
 				.titolo("titolo")
 				.timestamp(LocalDateTime.now())
 				.contenuto("cosebelle")
 				.build();
-		Message<PubblicazioneConfirmation> message = MessageBuilder
+		Message<ComunicazioneAziendaleConfirmation> message = MessageBuilder
 				.withPayload(pubblicazioneConfirmation)
 				.setHeader(KafkaHeaders.TOPIC, "pubblicazione-topic")
 				.build();

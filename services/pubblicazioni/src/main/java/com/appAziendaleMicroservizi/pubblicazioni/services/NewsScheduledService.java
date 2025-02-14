@@ -119,7 +119,7 @@ public class NewsScheduledService implements Job {
         CreateNewsRequest request = (CreateNewsRequest) jobDataMap.get("entityData");
         Long id_scheduled = jobDataMap.getLongValue("id");
         try {
-            newsService.createNews(request);
+            newsService.create(request);
         } catch (MyEntityNotFoundException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

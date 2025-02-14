@@ -7,11 +7,15 @@ import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.EntityId
 import com.appAziendaleMicroservizi.pubblicazioni.domains.dto.responses.NewsResponse;
 import com.appAziendaleMicroservizi.pubblicazioni.domains.entities.News;
 import com.appAziendaleMicroservizi.pubblicazioni.exceptions.MyEntityNotFoundException;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.ComunicazioneAziendaleConfirmation;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.NewsConfirmation;
+import com.appAziendaleMicroservizi.pubblicazioni.kafka.PubblicazioneProducer;
 import com.appAziendaleMicroservizi.pubblicazioni.mappers.NewsMapper;
 import com.appAziendaleMicroservizi.pubblicazioni.repositories.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,6 +32,9 @@ public class NewsService {
 
     @Autowired
     private PosizioneLavorativaClient posizioneLavorativaClient;
+
+    @Autowired
+    private PubblicazioneProducer pubblicazioneProducer;
 
     public News getById(Long id) throws MyEntityNotFoundException {
         return newsRepository.findById(id)
@@ -57,18 +64,26 @@ public class NewsService {
                 .toList();
     }
 
-
-    public EntityIdResponse createNews(CreateNewsRequest request) throws MyEntityNotFoundException, IllegalAccessException {
+    public EntityIdResponse create(CreateNewsRequest request) throws IllegalAccessException{
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
         var posizioneLavorativa = posizioneLavorativaClient.getPosizioneLavorativaResponseById(utente.idPosizioneLavorativa());
         if(!posizioneLavorativa.nome().equals("publisher")){
-            throw new IllegalAccessException("Solo i publisher possono creare le news");
+            ;//throw new IllegalAccessException("Solo i publisher possono creare le news");
         }
         News savedNews = newsRepository.save(newsMapper.fromCreateNewsRequest(request));
+        pubblicazioneProducer.sendConfermaPubblicazioneNews(NewsConfirmation
+                .builder()
+                .id(savedNews.getId())
+                .titolo(savedNews.getTitolo())
+                .contenuto(savedNews.getContenuto())
+                .immagine(savedNews.getImmagine())
+                .timestamp(LocalDateTime.now())
+                .build()
+        );
         return new EntityIdResponse(savedNews.getId());
     }
 
-    public EntityIdResponse updateNews(Long id, UpdateNewsRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse update(Long id, UpdateNewsRequest request) throws MyEntityNotFoundException {
         News news = getById(id);
         if (request.titolo() != null) news.setTitolo(request.titolo());
         if (request.contenuto() != null) news.setContenuto(request.contenuto());
