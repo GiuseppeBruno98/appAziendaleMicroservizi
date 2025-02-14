@@ -13,3 +13,8 @@ spring:
 
 server:
   port: 8070
+
+application:
+  config:
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
+    curriculum-url: http://localhost:8073/app/v1/curriculums

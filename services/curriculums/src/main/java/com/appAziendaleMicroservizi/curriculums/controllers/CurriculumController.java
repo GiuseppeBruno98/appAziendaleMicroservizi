@@ -5,7 +5,6 @@ import com.appAziendaleMicroservizi.curriculums.domains.dto.responses.GenericRes
 import com.appAziendaleMicroservizi.curriculums.domains.entities.Curriculum;
 import com.appAziendaleMicroservizi.curriculums.domains.exceptions.MyEntityNotFoundException;
 import com.appAziendaleMicroservizi.curriculums.services.CurriculumService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -25,12 +24,12 @@ public class CurriculumController {
     private CurriculumService curriculumService;
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Curriculum> getById(@PathVariable Long id) throws MyEntityNotFoundException {
+    public ResponseEntity<Curriculum> getById(@PathVariable Long id){
         return new ResponseEntity<>(curriculumService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping("/getByIdUtente/{id}")
-    public ResponseEntity<Curriculum> getByIdUtente(@PathVariable Long id) throws MyEntityNotFoundException {
+    public ResponseEntity<Curriculum> getByIdUtente(@PathVariable Long id){
         return new ResponseEntity<>(curriculumService.getByIdUtente(id), HttpStatus.OK);
     }
 
@@ -39,25 +38,27 @@ public class CurriculumController {
         return new ResponseEntity<>(curriculumService.getAll(), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<EntityIdResponse> create(@RequestParam @NotNull Long idUtente, @RequestParam("file") MultipartFile file) throws MyEntityNotFoundException, IOException {
-        return new ResponseEntity<>(curriculumService.create(idUtente,file), HttpStatus.CREATED);
+    @PostMapping("/upload")
+    public ResponseEntity<EntityIdResponse> upload(@RequestParam @NotNull Long idUtente, @RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseEntity<>(curriculumService.upload(idUtente,file), HttpStatus.CREATED);
     }
 
-    /*@PutMapping("/update/{id}")
-    public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUtenteRequest request) throws MyEntityNotFoundException {
-        return new ResponseEntity<>(curriculumService.updateCurriculum(id, request), HttpStatus.CREATED);
-    }*/
 
     @GetMapping("/download/{idUtente}")
-    public ResponseEntity<Resource> downloadCurriculum(@PathVariable Long idUtente) {
-        return curriculumService.downloadCurriculum(idUtente);
+    public ResponseEntity<Resource> download(@PathVariable Long idUtente) {
+        return curriculumService.download(idUtente);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<GenericResponse> deleteById(@PathVariable Long id) {
         curriculumService.deleteById(id);
         return new ResponseEntity<>(new GenericResponse("Curriculum con id " + id + " eliminato correttamente"), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{idUtente}")
+    public ResponseEntity<GenericResponse> deleteByIdUtente(@PathVariable Long idUtente) {
+        curriculumService.deleteByIdUtente(idUtente);
+        return new ResponseEntity<>(new GenericResponse("Curriculum con idUtente " + idUtente + " eliminato correttamente"), HttpStatus.OK);
     }
 
 

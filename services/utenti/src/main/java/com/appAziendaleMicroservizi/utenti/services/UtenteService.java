@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,13 +33,13 @@ public class UtenteService {
     @Autowired
     private ComunicazioneAziendaleClient comunicazioneAziendaleClient;
 
-    public Utente getById(Long id) throws MyEntityNotFoundException {
+    public Utente getById(Long id){
         return utenteRepository
                 .findById(id)
                 .orElseThrow(() -> new MyEntityNotFoundException("utente con id " + id + " non trovato"));
     }
 
-    public UtenteResponse getByIdWithResponse(Long id) throws MyEntityNotFoundException {
+    public UtenteResponse getByIdWithResponse(Long id){
         return utenteMapper.toUtenteResponse(utenteRepository
                 .findById(id)
                 .orElseThrow(() -> new MyEntityNotFoundException("l'utente con id " + id + " non esiste!")));
@@ -73,12 +74,12 @@ public class UtenteService {
                 .toList();
     }
 
-    public EntityIdResponse createUtente(CreateUtenteRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse createUtente(CreateUtenteRequest request) {
         Utente utenteSaved = utenteRepository.save(utenteMapper.fromCreateUtenteRequest(request));
         return new EntityIdResponse(utenteSaved.getId());
     }
 
-    public EntityIdResponse createComunicazioneAziendale(@Valid CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse createComunicazioneAziendale(@Valid CreateComunicazioneAziendaleRequest request){
         Utente utenteSaved = getById(request.creatorId());
         return comunicazioneAziendaleClient.createComunicazioneAziendale(request);
     }
@@ -87,7 +88,7 @@ public class UtenteService {
         utenteRepository.save(utente);
     }
 
-    public EntityIdResponse updateUtente(Long id, UpdateUtenteRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse updateUtente(Long id, UpdateUtenteRequest request){
         Utente myUtente = getById(id);
         if (request.nome() != null) myUtente.setNome(request.nome());
         if (request.cognome()!= null) myUtente.setCognome(request.cognome());

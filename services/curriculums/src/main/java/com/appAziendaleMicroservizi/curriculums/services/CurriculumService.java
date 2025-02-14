@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CurriculumService {
@@ -53,7 +52,7 @@ public class CurriculumService {
     }
 
 
-    public EntityIdResponse create(Long idUtente,MultipartFile file) throws MyEntityNotFoundException, IOException {
+    public EntityIdResponse upload(Long idUtente, MultipartFile file) throws MyEntityNotFoundException, IOException {
         var utente = utenteClient.getUtenteResponseById(idUtente);
         Curriculum newCurriculum= uploadCurriculum(idUtente, file);
 
@@ -99,7 +98,7 @@ public class CurriculumService {
     }
 
     // Metodo che restituisce una risorsa (file) con le intestazioni appropriate
-    public ResponseEntity<Resource> downloadCurriculum(Long idUtente) {
+    public ResponseEntity<Resource> download(Long idUtente) {
         // Ottieni il curriculum per l'utente
         Curriculum curriculum = curriculumRepository.findByIdUtente(idUtente).orElse(null);
 
@@ -148,6 +147,16 @@ public class CurriculumService {
 
     public void deleteById(Long id) {
         curriculumRepository.deleteById(id);
+    }
+
+    public void deleteByIdUtente(Long idUtente) {
+        var utente = utenteClient.getUtenteResponseById(idUtente);
+        Curriculum curriculum= curriculumRepository.findByIdUtente(idUtente).orElse(null);
+        if (curriculum != null) {
+            curriculumRepository.deleteById(curriculum.getId());
+        } else {
+            throw new IllegalArgumentException("il curriculum con idUtente " + idUtente + "non esiste");
+        }
     }
 
 }

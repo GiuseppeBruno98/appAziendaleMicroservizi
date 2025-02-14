@@ -10,11 +10,14 @@ import com.appAziendaleMicroservizi.utenti.domains.entities.Utente;
 import com.appAziendaleMicroservizi.utenti.exceptions.MyEntityNotFoundException;
 import com.appAziendaleMicroservizi.utenti.services.UtenteService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,12 +28,12 @@ public class UtenteController {
     private UtenteService utenteService;
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Utente> getById(@PathVariable Long id) throws MyEntityNotFoundException {
+    public ResponseEntity<Utente> getById(@PathVariable Long id){
         return new ResponseEntity<>(utenteService.getById(id), HttpStatus.OK);
     }
 
     @GetMapping("/getResponse/{id}")
-    public ResponseEntity<UtenteResponse> getByIdWithResponse(@PathVariable Long id) throws MyEntityNotFoundException {
+    public ResponseEntity<UtenteResponse> getByIdWithResponse(@PathVariable Long id){
         return new ResponseEntity<>(utenteService.getByIdWithResponse(id), HttpStatus.OK);
     }
 
@@ -45,17 +48,17 @@ public class UtenteController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateUtenteRequest request) throws MyEntityNotFoundException {
+    public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateUtenteRequest request){
         return new ResponseEntity<>(utenteService.createUtente(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUtenteRequest request) throws MyEntityNotFoundException {
+    public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUtenteRequest request){
         return new ResponseEntity<>(utenteService.updateUtente(id, request), HttpStatus.CREATED);
     }
 
     @PostMapping("/createComunicazioneAziendale")
-    public ResponseEntity<EntityIdResponse> createComunicazioneAziendale(@RequestBody @Valid CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public ResponseEntity<EntityIdResponse> createComunicazioneAziendale(@RequestBody @Valid CreateComunicazioneAziendaleRequest request){
         return new ResponseEntity<>(utenteService.createComunicazioneAziendale(request), HttpStatus.CREATED);
     }
 
@@ -66,5 +69,9 @@ public class UtenteController {
                 new GenericResponse("Utente con id " + id + " eliminato correttamente"), HttpStatus.OK);
     }
 
+    @PostMapping("/uploadCurriculum")
+    public ResponseEntity<EntityIdResponse> uploadCurriculum(@RequestParam @NotNull Long idUtente, @RequestParam("file") MultipartFile file) {
+        return new ResponseEntity<>(utenteService.uploadCurriculum(idUtente,file), HttpStatus.CREATED);
+    }
 
 }
