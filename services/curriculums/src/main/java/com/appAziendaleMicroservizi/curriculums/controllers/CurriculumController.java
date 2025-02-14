@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -37,14 +38,14 @@ public class CurriculumController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateCurriculumRequest request) throws MyEntityNotFoundException {
+    public ResponseEntity<EntityIdResponse> create(@RequestBody @Valid CreateCurriculumRequest request,@RequestParam("file") MultipartFile file) throws MyEntityNotFoundException {
         return new ResponseEntity<>(curriculumService.create(request), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    /*@PutMapping("/update/{id}")
     public ResponseEntity<EntityIdResponse> update(@PathVariable Long id, @RequestBody @Valid UpdateUtenteRequest request) throws MyEntityNotFoundException {
         return new ResponseEntity<>(curriculumService.updateCurriculum(id, request), HttpStatus.CREATED);
-    }
+    }*/
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<GenericResponse> deleteById(@PathVariable Long id) {
