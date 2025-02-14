@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: curriculums-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/curriculums #utenti, posizione lavorativa e dipartimento
+    username: pippo
+    password: pluto
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          utenti-service:
+            url: http://localhost:8070/app/v1/utenti
+
+
+server:
+  port: 8071
+
+application:
+  config:
+    utenti-url: http://localhost:8070/app/v1/utenti
+    posizioniLavorative-url: http://localhost:8070/app/v1/posizioneLavorativa
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
+    news-url: http://localhost:8071/app/v1/news
