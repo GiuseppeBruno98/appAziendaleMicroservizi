@@ -5,7 +5,7 @@ spring:
     import: optional:configserver:http://localhost:8888
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/curriculums #utenti, posizione lavorativa e dipartimento
+    url: jdbc:postgresql://localhost:5432/curriculums
     username: pippo
     password: pluto
   jpa:
@@ -23,7 +23,7 @@ spring:
 
 
 server:
-  port: 8071
+  port: 8073
 
 application:
   config:
@@ -31,3 +31,6 @@ application:
     posizioniLavorative-url: http://localhost:8070/app/v1/posizioneLavorativa
     comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
     news-url: http://localhost:8071/app/v1/news
+
+file:
+  upload-dir-curriculum: ./services/curriculums/src/main/java/com/appAziendaleMicroservizi/curriculums/files/curriculum
