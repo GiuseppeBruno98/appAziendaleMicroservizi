@@ -18,17 +18,12 @@ spring:
 server:
   port: 8070
 
-  eureka:
-    client:
-      service-url:
-        defaultZone: http://localhost:8761/eureka/  # URL del server Eureka
-      register-with-eureka: true  # Registrazione automatica con Eureka
-      fetch-registry: true  # Recupero dei servizi registrati da Eureka
-      healthcheck:
-        enabled: true  # Abilita il controllo di stato
-        path: /actuator/health  # Percorso per il controllo di stato del servizio
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
 
 application:
   config:
-    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
-    curriculum-url: http://localhost:8073/app/v1/curriculums
+    comunicazione-aziendale-url: http://comunicazione-aziendale-service/app/v1/comunicazioneAziendale
+    curriculum-url: http://curriculum-service/app/v1/curriculums
