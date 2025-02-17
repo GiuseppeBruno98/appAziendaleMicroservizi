@@ -69,9 +69,5 @@ public class UtenteController {
                 new GenericResponse("Utente con id " + id + " eliminato correttamente"), HttpStatus.OK);
     }
 
-    @PostMapping("/uploadCurriculum")
-    public ResponseEntity<EntityIdResponse> uploadCurriculum(@RequestParam @NotNull Long idUtente, @RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>(utenteService.uploadCurriculum(idUtente,file), HttpStatus.CREATED);
-    }
 
 }

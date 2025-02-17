@@ -1,0 +1,27 @@
+server:
+  port: 8222
+
+spring:
+    cloud:
+      gateway:
+        discovery:
+          locator:
+            enabled: true
+            lower-case-service-id: true
+          routes:
+            - id: utente-service
+              predicates:
+                - Path=/api/v1/utenti/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/  # Assicurati che questa URL sia corretta
+    register-with-eureka: false   # Se non vuoi che il Gateway si registri su Eureka
+    fetch-registry: true       # Assicurati che il Gateway stia recuperando il registro da Eureka
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
