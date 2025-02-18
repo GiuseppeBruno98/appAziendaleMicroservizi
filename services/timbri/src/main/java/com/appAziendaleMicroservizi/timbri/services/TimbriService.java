@@ -9,16 +9,31 @@ import com.appAziendaleMicroservizi.timbri.domains.entities.Timbri;
 import com.appAziendaleMicroservizi.timbri.domains.exceptions.MyEntityNotFoundException;
 import com.appAziendaleMicroservizi.timbri.mappers.TimbriMapper;
 import com.appAziendaleMicroservizi.timbri.repositories.TimbriRepository;
+
+import jakarta.annotation.PostConstruct;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TimbriService {
+public class TimbriService{
 
     @Autowired
     TimbriRepository timbriRepository;
@@ -28,6 +43,19 @@ public class TimbriService {
 
     @Autowired
     private UtenteClient utenteClient;
+
+    @Autowired
+    private Scheduler scheduler;
+
+    @Value("${file.upload-daily-dir-timbri}")
+    private String uploadDir;
+
+    @PostConstruct
+    public void init() throws Exception {
+        // Pianifica il job giornaliero all'avvio
+        scheduleDailyJobAtSpecificTime();
+
+    }
 
     //INIZIO FUNZIONI
 
@@ -158,4 +186,32 @@ public class TimbriService {
         } else return new ErrorResponse("IllegalArgumentException","l'utenteId " + utente.id() +" non puo finire di nuovo il lavoro");
     }
 
+    public void scheduleDailyJobAtSpecificTime() throws Exception {
+        String cronExpression = "0 23 14 * * ?"; // Ogni giorno alle 13:53 (modifica questa cron expression come preferisci)
+
+        // Crea un job con la logica specifica
+        JobDetail jobDetail = buildJobDetailForDailyJob();
+        CronTrigger cronTrigger = TriggerBuilder
+                .newTrigger()
+                .withIdentity("timbri-daily-email-trigger", "timbri-daily-jobs")  // Nome del trigger
+                .withSchedule(
+                        CronScheduleBuilder.cronSchedule(cronExpression)
+                                .withMisfireHandlingInstructionDoNothing() // Evita esecuzioni ripetute in caso di misfire
+                )  // La cron espressione
+                .build();
+
+        // Verifica se il job esiste già e, in caso affermativo, cancellalo
+        JobKey jobKey = new JobKey("timbri-daily-email", "timbri-daily-jobs");
+
+        // Pianifica il job
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+    }
+
+    private JobDetail buildJobDetailForDailyJob() {
+        // Creazione di un job con logica personalizzata per il job giornaliero
+        return JobBuilder.newJob(TimbriDailyJob.class)
+                .withIdentity("timbri-daily-email", "timbri-daily-jobs")  // Nome del job
+                .storeDurably()
+                .build();
+    }
 }

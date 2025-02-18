@@ -10,6 +10,17 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  mail:
+    host: mail_appAziendale # Nome del container Docker
+    port: 1025      # Porta SMTP di MailDev
+    username: ""    # MailDev non richiede autenticazione
+    password: ""    # MailDev non richiede autenticazione
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
 
 server:
   port: 8072

@@ -63,7 +63,7 @@ public class ComunicazioneAziendaleService {
                 .toList();
     }
 
-    public EntityIdResponse create(CreateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse create(CreateComunicazioneAziendaleRequest request){
         var utente = utenteClient.getUtenteResponseById(request.creatorId());
         var utente2 = utenteClient2.getUtenteResponseById(request.creatorId());
         ComunicazioneAziendale savedComunicazione = comunicazioneAziendaleRepository.save(comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleRequest(request));
@@ -79,14 +79,14 @@ public class ComunicazioneAziendaleService {
         return new EntityIdResponse(savedComunicazione.getId());
     }
 
-    public EntityIdResponse update(Long id, UpdateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse update(Long id, UpdateComunicazioneAziendaleRequest request){
         ComunicazioneAziendale comunicazione = getById(id);
         if (request.titolo() != null) comunicazione.setTitolo(request.titolo());
         if (request.contenuto() != null) comunicazione.setContenuto(request.contenuto());
         return new EntityIdResponse(comunicazioneAziendaleRepository.save(comunicazione).getId());
     }
 
-    public void deleteById(Long id) throws MyEntityNotFoundException {
+    public void deleteById(Long id){
         if (!comunicazioneAziendaleRepository.existsById(id)) {
             throw new MyEntityNotFoundException("Comunicazione con id " + id + " non trovata");
         }

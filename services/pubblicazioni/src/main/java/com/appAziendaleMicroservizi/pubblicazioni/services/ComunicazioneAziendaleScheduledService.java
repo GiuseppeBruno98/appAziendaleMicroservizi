@@ -35,12 +35,12 @@ public class ComunicazioneAziendaleScheduledService implements Job {
     @Autowired
     private Scheduler scheduler;
 
-    public ComunicazioneAziendaleScheduled getById(Long id) throws MyEntityNotFoundException {
+    public ComunicazioneAziendaleScheduled getById(Long id){
         return comunicazioneAziendaleScheduledRepository.findById(id)
                 .orElseThrow(() -> new MyEntityNotFoundException("ComunicazioneAziendale con id " + id + " non trovata"));
     }
 
-    public ComunicazioneAziendaleScheduledResponse getByIdWithResponse(Long id) throws MyEntityNotFoundException {
+    public ComunicazioneAziendaleScheduledResponse getByIdWithResponse(Long id){
         return comunicazioneAziendaleMapper.toComunicazioneAziendaleScheduledResponse(comunicazioneAziendaleScheduledRepository
                 .findById(id)
                 .orElseThrow(() -> new MyEntityNotFoundException("ComunicazioneAziendale con id " + id + " non esiste!")));
@@ -64,7 +64,7 @@ public class ComunicazioneAziendaleScheduledService implements Job {
     }
 
 
-    public EntityIdResponse create(CreateComunicazioneAziendaleScheduledRequest request) throws MyEntityNotFoundException, SchedulerException {
+    public EntityIdResponse create(CreateComunicazioneAziendaleScheduledRequest request) throws SchedulerException {
         ComunicazioneAziendaleScheduled comunicazioneAziendaleScheduled =comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleScheduledRequestToComunicazioneAziendaleScheduled(request);
         comunicazioneAziendaleScheduledRepository.save(comunicazioneAziendaleScheduled);
         CreateComunicazioneAziendaleRequest createComunicazioneAziendaleRequest= comunicazioneAziendaleMapper.fromCreateComunicazioneAziendaleScheduledRequestToCreateComunicazioneAziendaleRequest(request);
@@ -75,21 +75,21 @@ public class ComunicazioneAziendaleScheduledService implements Job {
         return EntityIdResponse.builder().id(comunicazioneAziendaleScheduled.getId()).build();
     }
 
-    public EntityIdResponse update(Long id, UpdateComunicazioneAziendaleRequest request) throws MyEntityNotFoundException {
+    public EntityIdResponse update(Long id, UpdateComunicazioneAziendaleRequest request){
         ComunicazioneAziendaleScheduled news = getById(id);
         if (request.titolo() != null) news.setTitolo(request.titolo());
         if (request.contenuto() != null) news.setContenuto(request.contenuto());
         return new EntityIdResponse(comunicazioneAziendaleScheduledRepository.save(news).getId());
     }
 
-    public void deleteById(Long id) throws MyEntityNotFoundException {
+    public void deleteById(Long id){
         if (!comunicazioneAziendaleScheduledRepository.existsById(id)) {
             throw new MyEntityNotFoundException("News con id " + id + " non trovata");
         }
         comunicazioneAziendaleScheduledRepository.deleteById(id);
     }
-    private Trigger buildJobTrigger(JobDetail jobDetail, Date publishTime) {
 
+    private Trigger buildJobTrigger(JobDetail jobDetail, Date publishTime) {
         return TriggerBuilder
                 .newTrigger()
                 .forJob(jobDetail)
@@ -117,11 +117,7 @@ public class ComunicazioneAziendaleScheduledService implements Job {
         JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
         CreateComunicazioneAziendaleRequest request = (CreateComunicazioneAziendaleRequest) jobDataMap.get("entityData");
         Long id_scheduled = jobDataMap.getLongValue("id");
-        try {
-            comunicazioneAziendaleService.create(request);
-        } catch (MyEntityNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        comunicazioneAziendaleService.create(request);
         comunicazioneAziendaleScheduledRepository.deleteById(id_scheduled);
     }
 }
