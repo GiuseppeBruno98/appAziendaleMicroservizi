@@ -2,23 +2,27 @@ server:
   port: 8222  # Porta del Gateway
 
 spring:
-     cloud:
+    cloud:
       gateway:
         discovery:
           locator:
             enabled: true  # Abilita la discovery locator
             lower-case-service-id: true  # Converti gli id dei servizi in minuscolo
         routes:
-          - id: utente-service
-            uri: lb://utente-service  # Usa Eureka per risolvere l'URL
+          - id: utente-route
+            uri: http://localhost:8070 # Usa Eureka per risolvere l'URL
             predicates:
               - Path=/app/v1/utenti/**
-          - id: dipartimento-service
-            uri: lb://utente-service  # Usa Eureka per risolvere l'URL
+
+
+          - id: dipartimento-route
+            uri: http://localhost:8070  # Usa Eureka per risolvere l'URL
             predicates:
               - Path=/app/v1/dipartimento/**
-          - id: posizione-lavorativa-service
-            uri: lb://utente-service  # Usa Eureka per risolvere l'URL
+
+
+          - id: posizioneLavorativa-route
+            uri: http://localhost:8070 # Usa Eureka per risolvere l'URL
             predicates:
               - Path=/app/v1/posizioneLavorativa/**
 
@@ -33,4 +37,4 @@ logging:
   level:
     com.netflix.discovery: DEBUG  # Log per il client Eureka
     org.springframework.cloud.gateway: DEBUG  # Log per il Gateway
-    org.springframework.web: DEBUG
+    org.springframework.web: DEBUG  # L

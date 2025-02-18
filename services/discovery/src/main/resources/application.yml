@@ -11,9 +11,9 @@ eureka:
     enable-self-preservation: false  # Disabilita la protezione di auto-preservazione per facilitare i test
   client:
     register-with-eureka: false  # Non è necessario per il server Eureka
-    fetch-registry: false        # Non è necessario per il server Eureka
+    fetch-registry: false       # Non è necessario per il server Eureka
   serviceUrl:
-    defaultZone: http://localhost:8761/eureka/  # URL dove il server Eureka è in ascolto
+    defaultZone: http://localhost:8761/ # URL dove il server Eureka è in ascolto
 
 server:
   port: 8761  # La porta del server Eureka
