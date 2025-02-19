@@ -6,6 +6,17 @@ spring:
     import: optional:configserver:http://localhost:8888  # Configurazione esterna se usi un config server
   application:
     name: gateway-service  # Nome del tuo Gateway
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/gateway
+    username: pippo
+    password: pluto
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   cloud:
     gateway:
       discovery:
@@ -48,4 +59,7 @@ management:
         include: "*"  # Espone tutti gli endpoint Actuator
   endpoint:
     gateway:
-      enabled: true  # Abilita gli endpoint Actuator per il gateway
+      enabled: true       # Abilita gli endpoint Actuator per il gateway
+
+jwt:
+  secret: "GbOGC6XP6uhqfNUzDIYeqqwO34Ne1EuMOrtsiatc0wo="

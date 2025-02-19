@@ -37,6 +37,11 @@ public class UtenteController {
         return new ResponseEntity<>(utenteService.getByIdWithResponse(id), HttpStatus.OK);
     }
 
+    @GetMapping("/getResponseByEmail")
+    public ResponseEntity<UtenteResponse> getByEmailWithResponse(@RequestBody String email){
+        return new ResponseEntity<>(utenteService.getByEmailResponse(email), HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Utente>> getAll() {
         return new ResponseEntity<>(utenteService.getAll(), HttpStatus.OK);

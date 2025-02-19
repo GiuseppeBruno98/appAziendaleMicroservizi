@@ -2,6 +2,17 @@ server:
   port: 8222  # Porta del Gateway
 
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/utenti #utenti, posizione lavorativa e dipartimento
+    username: pippo
+    password: pluto
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   cloud:
     gateway:
       discovery:
@@ -45,3 +56,6 @@ management:
   endpoint:
     gateway:
       enabled: true  # Abilita gli endpoint Actuator per il gateway
+
+jwt:
+  secret: "GbOGC6XP6uhqfNUzDIYeqqwO34Ne1EuMOrtsiatc0wo="

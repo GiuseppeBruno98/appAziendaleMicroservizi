@@ -51,6 +51,15 @@ public class UtenteService {
                 .orElseThrow(() -> new MyEntityNotFoundException("l'utente con email " + email + " non esiste!"));
     }
 
+    public UtenteResponse getByEmailResponse(@Email(message = "Email non valida") String email) {
+
+        return utenteMapper.toUtenteResponse(
+                utenteRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new MyEntityNotFoundException("l'utente con email " + email + " non esiste!")));
+    }
+
+
     public Utente getByRegistrationToken(String token) {
         return utenteRepository
                 .findByRegistrationToken(token)
