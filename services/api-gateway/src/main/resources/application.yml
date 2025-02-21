@@ -25,12 +25,13 @@ spring:
           lower-case-service-id: true  # Converti gli id dei servizi in minuscolo
       routes:
         - id: utente-route
-          uri: lb://utente-service # Usa Eureka per risolvere l'URL
+          uri: lb://utente-service
+          # Usa Eureka per risolvere l'URL
           predicates:
             - Path=/app/v1/utenti/**
 
         - id: dipartimento-route
-          uri: lb://utente-service  # Usa Eureka per risolvere l'URL
+          uri: lb://utente-service # Usa Eureka per risolvere l'URL
           predicates:
             - Path=/app/v1/dipartimento/**
 
@@ -39,12 +40,18 @@ spring:
           predicates:
             - Path=/app/v1/posizioneLavorativa/**
 
+        - id: auth-route
+          uri: lb://utente-service # Usa Eureka per risolvere l'URL
+          predicates:
+            - Path=/app/v1/auth/**
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/  # Assicurati che questa URL sia corretta
     register-with-eureka: false   # Se non vuoi che il Gateway si registri su Eureka
-    fetch-registry: true         # Abilita il recupero del registro da Eureka
+    fetch-registry: true # Abilita il recupero del registro da Eureka
+
 
 logging:
   level:

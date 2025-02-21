@@ -33,7 +33,12 @@ spring:
         - id: posizioneLavorativa-route
           uri: lb://utente-service # Usa Eureka per risolvere l'URL
           predicates:
-            - Path=/app/v1/posizioneLavorativa/**
+            - Path=/app/v1/posizioneLavorativa/**ù
+
+        - id: auth-route
+          uri: lb://utente-service # Usa Eureka per risolvere l'URL
+          predicates:
+            - Path=/app/v1/auth/**
 
 eureka:
   client:
