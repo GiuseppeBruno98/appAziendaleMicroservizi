@@ -29,13 +29,15 @@ public class SecurityConfig {
                 "/app/v1/auth/confirm",
                 "/app/v1/auth/reset_pw",
                 "/app/v1/auth/forcePassword",
-                "/app/v1/utenti/all"
+                "/app/v1/utenti/all",
+                "/app/v1/timbri/all"
         );
 
         // Imposta i tuoi endpoint pubblici
         jwtAuthFilter.setPublicEndpoints(publicEndpoints);
 
         // Configura la sicurezza
+        System.out.println(publicEndpoints);
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)  // Disabilita CSRF se non è necessario
                 .authorizeExchange(exchanges -> {

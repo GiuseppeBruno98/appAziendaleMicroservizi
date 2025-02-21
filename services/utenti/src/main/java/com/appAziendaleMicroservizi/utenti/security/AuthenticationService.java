@@ -80,8 +80,11 @@ public class AuthenticationService {
     }
 
     public GenericResponse logout(Long idUtente, String token) {
-        tokenBlackListClient.insert(idUtente,token);
-        return GenericResponse.builder().message("Logout effettuato con successo").build();
+        tokenBlackListClient.insertToken(idUtente,token);
+        return GenericResponse
+                .builder()
+                .message("Logout effettuato con successo")
+                .build();
     }
 
     /*

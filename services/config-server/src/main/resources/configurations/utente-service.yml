@@ -27,3 +27,4 @@ application:
   config:
     comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
     curriculum-url: http://localhost:8073/app/v1/curriculums
+    token-blackList-url: http://localhost:8222/app/v1/tokenBlackList

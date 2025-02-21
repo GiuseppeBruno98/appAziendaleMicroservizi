@@ -2,7 +2,6 @@ package com.appAziendaleMicroservizi.api_gateway.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -55,8 +53,8 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpirationDate(token)
+        return Boolean.TRUE.equals(extractExpirationDate(token)
                 .map(expirationDate -> expirationDate.before(new Date()))
-                .block(); // Uso `.block()` perché non possiamo restituire `Mono<Boolean>` in un metodo sincrono.
+                .block()); // Uso `.block()` perché non possiamo restituire `Mono<Boolean>` in un metodo sincrono.
     }
 }

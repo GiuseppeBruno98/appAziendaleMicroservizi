@@ -45,6 +45,11 @@ spring:
           predicates:
             - Path=/app/v1/auth/**
 
+        - id: timbri-route
+          uri: lb://timbri-service # Usa Eureka per risolvere l'URL
+          predicates:
+            - Path=/app/v1/timbri/**
+
 eureka:
   client:
     service-url:

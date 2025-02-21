@@ -98,6 +98,7 @@ public class JwtAuthFilter implements WebFilter {
                                                String jwt,
                                                UserDetails userDetails) {
         // Controllo scadenza token
+        System.out.println("pippo");
         return jwtService.isTokenValid(jwt, userDetails.getUsername())
                 .flatMap(isValid -> {
                     if (!isValid) {
