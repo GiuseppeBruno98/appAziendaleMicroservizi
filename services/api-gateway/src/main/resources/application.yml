@@ -63,3 +63,11 @@ management:
 
 jwt:
   secret: "GbOGC6XP6uhqfNUzDIYeqqwO34Ne1EuMOrtsiatc0wo="
+
+application:
+  config:
+    utenti-url: http://localhost:8070/app/v1/utenti
+    posizioniLavorative-url: http://localhost:8070/app/v1/posizioneLavorativa
+    comunicazione-aziendale-url: http://localhost:8071/app/v1/comunicazioneAziendale
+    news-url: http://localhost:8071/app/v1/news
+    token-blackList-url: http://localhost:8222/app/v1/tokenBlackList

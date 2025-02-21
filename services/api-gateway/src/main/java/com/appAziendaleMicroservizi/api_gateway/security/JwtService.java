@@ -28,16 +28,6 @@ public class JwtService {
         signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username, Map<String, Object> extraClaims) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 ora di durata
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     public Mono<String> extractUsername(String token) {
         return Mono.fromSupplier(() -> extractClaim(token, Claims::getSubject));
     }

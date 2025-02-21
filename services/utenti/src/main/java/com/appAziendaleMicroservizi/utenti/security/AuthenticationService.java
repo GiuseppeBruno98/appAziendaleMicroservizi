@@ -1,21 +1,24 @@
 package com.appAziendaleMicroservizi.utenti.security;
 
-import com.example.AppAziendale.domains.Entities.Utente;
-import com.example.AppAziendale.domains.dto.requests.AuthRequest;
-import com.example.AppAziendale.domains.dto.requests.ChangePasswordRequest;
-import com.example.AppAziendale.domains.dto.requests.RegisterRequest;
-import com.example.AppAziendale.domains.dto.responses.AuthenticationResponse;
-import com.example.AppAziendale.domains.dto.responses.ErrorResponse;
-import com.example.AppAziendale.domains.dto.responses.GenericResponse;
-import com.example.AppAziendale.domains.enums.Role;
-import com.example.AppAziendale.services.PosizioneLavorativaService;
-import com.example.AppAziendale.services.TokenBlackListService;
-import com.example.AppAziendale.services.UtenteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.AuthRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.ChangePasswordRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.RegisterRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.AuthenticationResponse;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.ErrorResponse;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.GenericResponse;
+import com.appAziendaleMicroservizi.utenti.domains.entities.Utente;
+import com.appAziendaleMicroservizi.utenti.domains.enums.Role;
+import com.appAziendaleMicroservizi.utenti.services.PosizioneLavorativaService;
+import com.appAziendaleMicroservizi.utenti.services.TokenBlackListClient;
+import com.appAziendaleMicroservizi.utenti.services.UtenteService;
+import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,11 +37,11 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private TokenBlackListService tokenBlackListService;
+    private TokenBlackListClient tokenBlackListClient;
     @Autowired
     private PosizioneLavorativaService posizioneLavorativaService;
-    @Autowired
-    private JavaMailSender javaMailSender;
+    /*@Autowired
+    private JavaMailSender javaMailSender;*/
 
     public AuthenticationResponse register(RegisterRequest request) {
         Utente utente = Utente
@@ -53,14 +56,14 @@ public class AuthenticationService {
                 .indirizzo(request.indirizzo())
                 .ruolo(Role.TOCONFIRM)
                 .imgUtente(request.imgUtente())
-                .idPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa().id()))
+                .idPosizioneLavorativa(posizioneLavorativaService.getById(request.idPosizioneLavorativa()))
                 .build();
         String jwtToken = jwtService.generateToken(utente);
         utente.setRegistrationToken(jwtToken);
 
         utenteService.insertUtente(utente);
         String confirmationUrl = "http://localhost:8080/app/v1/auth/confirm?token=" + utente.getRegistrationToken();
-        javaMailSender.send(createConfirmationEmail(utente.getEmail(), confirmationUrl));
+        //javaMailSender.send(createConfirmationEmail(utente.getEmail(), confirmationUrl));
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -77,11 +80,13 @@ public class AuthenticationService {
     }
 
     public GenericResponse logout(Long idUtente, String token) {
-        tokenBlackListService.insertToken(idUtente,token);
+        tokenBlackListClient.insert(idUtente,token);
         return GenericResponse.builder().message("Logout effettuato con successo").build();
     }
 
+    /*
     private SimpleMailMessage createConfirmationEmail(String email, String confirmationUrl) {
+        return null;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail
         message.setReplyTo("crinq98@gmail.com"); // a chi rispondo se faccio "rispondi"
@@ -91,7 +96,7 @@ public class AuthenticationService {
         return message; // ritorno il messaggio
     }
 
-    private SimpleMailMessage createChangePasswordEmail(String email, String forcePasswordUrl) {
+    /*private SimpleMailMessage createChangePasswordEmail(String email, String forcePasswordUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail
         message.setReplyTo("crinq98@gmail.com"); // a chi rispondo se faccio "rispondi"
@@ -99,7 +104,7 @@ public class AuthenticationService {
         message.setSubject("CONFERMA IL CAMBIO DELLA PASSWORD per AppAziendale"); // il TITOLO!
         message.setText("Ciao! Clicca su questo link per confermare il cambio della tua password! " + forcePasswordUrl); // il testo!
         return message; // ritorno il messaggio
-    }
+    }*/
 
     public GenericResponse confirmRegistration(String token) {
         Utente utente = utenteService.getByRegistrationToken(token);
@@ -129,7 +134,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public GenericResponse resetPassword(String email, String newPassword){
+    /*public GenericResponse resetPassword(String email, String newPassword){
         Utente utente= utenteService.getByEmail(email);
         utente.setPassword(newPassword);
         String resetURL = "http://localhost:8080/app/v1/auth/forcePassword?token=" + utente.getRegistrationToken()+"&newPassword="+utente.getPassword();
@@ -155,7 +160,7 @@ public class AuthenticationService {
                 .builder()
                 .message("Password cambiata con successo!")
                 .build();
-    }
+    }*/
 
 
 }

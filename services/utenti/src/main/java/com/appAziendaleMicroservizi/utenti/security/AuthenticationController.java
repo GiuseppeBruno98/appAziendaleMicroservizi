@@ -1,10 +1,10 @@
 package com.appAziendaleMicroservizi.utenti.security;
 
-import com.example.AppAziendale.domains.dto.requests.AuthRequest;
-import com.example.AppAziendale.domains.dto.requests.ChangePasswordRequest;
-import com.example.AppAziendale.domains.dto.requests.RegisterRequest;
-import com.example.AppAziendale.domains.dto.responses.AuthenticationResponse;
-import com.example.AppAziendale.domains.dto.responses.GenericResponse;
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.AuthRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.ChangePasswordRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.requests.RegisterRequest;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.AuthenticationResponse;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.GenericResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
-    @PostMapping("/reset_pw")
+    /*@PostMapping("/reset_pw")
     public ResponseEntity<?> resetPassword(@RequestParam String mail, @RequestParam String newPassword) {
         return new ResponseEntity<>(authenticationService.resetPassword(mail, newPassword), HttpStatus.CREATED);
     }
@@ -61,6 +61,6 @@ public class AuthenticationController {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
-    }
+    }*/
 
 }

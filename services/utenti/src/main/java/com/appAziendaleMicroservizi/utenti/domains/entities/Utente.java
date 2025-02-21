@@ -8,9 +8,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,7 +25,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "utente")
 @EntityListeners(AuditingEntityListener.class)
-public class Utente{
+public class Utente implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,4 +85,13 @@ public class Utente{
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(ruolo.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

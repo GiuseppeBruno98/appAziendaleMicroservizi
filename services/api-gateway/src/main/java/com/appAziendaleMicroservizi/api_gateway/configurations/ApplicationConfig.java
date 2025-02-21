@@ -5,17 +5,16 @@ import com.appAziendaleMicroservizi.api_gateway.services.UtenteClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -26,30 +25,23 @@ public class ApplicationConfig {
     private UtenteClient utenteClient;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
+    public ReactiveUserDetailsService reactiveUserDetailsService() {
+        return username -> Mono.defer(() -> {
+            // Usa Mono.defer o Mono.fromSupplier per creare la pipeline reattiva
+            // (anche se dentro c'è una chiamata sincrona, almeno lo incapsuliamo in un Mono).
             UtenteResponse utenteResponse = utenteClient.getUtenteResponseByEmail(username);
             if (utenteResponse == null) {
-                throw new UsernameNotFoundException("Utente con email " + username + " non trovato");
+                return Mono.error(new UsernameNotFoundException("Utente con email " + username + " non trovato"));
             }
-
-            // Mappa il ruolo in un GrantedAuthority
             GrantedAuthority authority = new SimpleGrantedAuthority(utenteResponse.ruolo());
-
-            return User.builder()
-                    .username(utenteResponse.email())
-                    .password(utenteResponse.password())
-                    .authorities(List.of(authority)) // Lista con un solo ruolo
-                    .build();
-        };
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() { // -> oggetto necessario a estrapolare i dati dell'utente
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+            return Mono.just(
+                    User.builder()
+                            .username(utenteResponse.email())
+                            .password(utenteResponse.password())
+                            .authorities(List.of(authority))
+                            .build()
+            );
+        });
     }
 
     @Bean
@@ -58,9 +50,12 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
+    public ReactiveAuthenticationManager reactiveAuthenticationManager(ReactiveUserDetailsService reactiveUserDetailsService,
+                                                                       PasswordEncoder passwordEncoder) {
+        UserDetailsRepositoryReactiveAuthenticationManager authManager =
+                new UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService);
+        authManager.setPasswordEncoder(passwordEncoder);
+        return authManager;
     }
 
 

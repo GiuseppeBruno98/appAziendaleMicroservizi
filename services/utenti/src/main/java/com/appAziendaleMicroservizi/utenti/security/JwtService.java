@@ -13,7 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
+
 
 @Service
 public class JwtService {
@@ -41,7 +41,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUsername(String token) {
+   /* public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -61,5 +61,5 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
+    }*/
 }

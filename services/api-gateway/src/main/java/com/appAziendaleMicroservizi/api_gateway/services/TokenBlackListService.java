@@ -1,6 +1,7 @@
 package com.appAziendaleMicroservizi.api_gateway.services;
 
 
+import com.appAziendaleMicroservizi.api_gateway.domains.dto.responses.EntityIdResponse;
 import com.appAziendaleMicroservizi.api_gateway.domains.entities.TokenBlackList;
 import com.appAziendaleMicroservizi.api_gateway.repositories.TokenBlackListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ public class TokenBlackListService {
         return tokenBlackListRepository.getByToken(token).isPresent();
     }
 
-    public void insertToken(Long id_utente, String token) {
+    public EntityIdResponse insertToken(Long id_utente, String token) {
         TokenBlackList tokenBlackList = TokenBlackList
                 .builder()
                 .token(token)
                 .idUtente(id_utente)
                 .build();
-        tokenBlackListRepository.save(tokenBlackList);
+        return new EntityIdResponse(tokenBlackListRepository.save(tokenBlackList).getId());
     }
 
 }

@@ -25,7 +25,11 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+jwt:
+  secret: "GbOGC6XP6uhqfNUzDIYeqqwO34Ne1EuMOrtsiatc0wo="
+
 application:
   config:
     comunicazione-aziendale-url: http://comunicazione-aziendale-service/app/v1/comunicazioneAziendale
     curriculum-url: http://curriculum-service/app/v1/curriculums
+    token-blackList-url: http://localhost:8222/app/v1/tokenBlackList

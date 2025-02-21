@@ -14,9 +14,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -32,7 +35,7 @@ public class JwtAuthFilter implements WebFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private ReactiveUserDetailsService reactiveUserDetailsService;
 
     @Autowired
     private TokenBlackListService tokenBlackListService;
@@ -43,64 +46,90 @@ public class JwtAuthFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String requestURI = exchange.getRequest().getURI().getPath();
-        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+
 
         // Se l'endpoint è pubblico, bypassiamo il filtro
         if (isPublicUrl(requestURI)) {
             return chain.filter(exchange);
         }
+        // Se non c'è il token, restituiamo un 401
+        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        // Se non c'è il token, restituiamo un errore
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Mono.error(new RuntimeException("Token JWT mancante o malformato"));
+            return this.sendAuthErrorResponse(exchange, "MissingToken", "Token JWT mancante o malformato");
         }
 
         // Estraggo il token JWT
         String jwt = authHeader.substring(7);
 
-        // Verifico se il token è in blacklist
+        // Verifico la blacklist
         if (tokenBlackListService.isPresentToken(jwt)) {
-            return Mono.error(new RuntimeException("Token nella blacklist, non è più valido!"));
+            return this.sendAuthErrorResponse(exchange, "Blacklisted", "Token nella blacklist, non è più valido!");
         }
 
         // Estraggo l'email dal token
         Mono<String> emailMono = jwtService.extractUsername(jwt);
 
-        return emailMono.flatMap(email -> {
+        return emailMono
+                .flatMap(email -> {
                     if (email == null) {
-                        // Restituisco un errore tramite Mono.error()
-                        return Mono.error(new RuntimeException("Username non trovato nel token"));
+                        return this.sendAuthErrorResponse(exchange, "InvalidToken", "Username non trovato nel token");
                     }
 
-                    return Mono.fromCallable(() -> userDetailsService.loadUserByUsername(email))
-                            .flatMap(userDetails -> {
-                                // Creiamo il contesto di autenticazione
-                                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                                        userDetails, null, userDetails.getAuthorities()
-                                );
-
-                                // Controllo ruolo TOCONFIRM
-                                if (userDetails.getAuthorities().stream()
-                                        .map(GrantedAuthority::getAuthority)
-                                        .anyMatch(role -> role.equals("TOCONFIRM"))) {
-                                    // Restituiamo errore se l'utente non è confermato
-                                    return Mono.error(new RuntimeException("Devi confermare l'account!"));
-                                }
-
-                                // Salviamo l'autenticazione nel Security Context reattivo
-                                return chain.filter(exchange)
-                                        .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
+                    // Carichiamo l'utente in modo reattivo
+                    return reactiveUserDetailsService.findByUsername(email)
+                            .flatMap(userDetails -> validateUserAndContinue(exchange, chain, jwt, userDetails))
+                            .onErrorResume(ex -> {
+                                // Se la findByUsername fallisce (UsernameNotFoundException), restituire un 401
+                                return this.sendAuthErrorResponse(exchange, "UserNotFound", ex.getMessage());
                             });
                 })
                 .onErrorResume(e -> {
-                    // Restituiamo un errore tramite Mono.error() in caso di eccezione
-                    return Mono.error(new RuntimeException("Errore nell'autenticazione: " + e.getMessage()));
+                    // Altri errori generici (es. token scaduto, problemi di parsing, ecc.)
+                    return this.sendAuthErrorResponse(exchange, "AuthError", e.getMessage());
                 });
     }
 
+    /**
+     * Se l'utente esiste, verifichiamo le scadenze, lo stato "TOCONFIRM", ecc.
+     */
+    private Mono<Void> validateUserAndContinue(ServerWebExchange exchange,
+                                               WebFilterChain chain,
+                                               String jwt,
+                                               UserDetails userDetails) {
+        // Controllo scadenza token
+        return jwtService.isTokenValid(jwt, userDetails.getUsername())
+                .flatMap(isValid -> {
+                    if (!isValid) {
+                        return this.sendAuthErrorResponse(exchange, "InvalidToken", "Token non valido o scaduto");
+                    }
 
+                    // Controllo ruolo TOCONFIRM
+                    boolean toConfirm = userDetails.getAuthorities().stream()
+                            .map(GrantedAuthority::getAuthority)
+                            .anyMatch(role -> role.equals("TOCONFIRM"));
 
-    private Mono<Void> sendAuthErrorResponse(ServerWebExchange exchange, String error, String message) throws JsonProcessingException {
+                    if (toConfirm) {
+                        return this.sendAuthErrorResponse(exchange, "AccountNotConfirmed",
+                                "Devi confermare l'account!");
+                    }
+
+                    // Creiamo il contesto di autenticazione
+                    Authentication authentication =
+                            new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+
+                    // Iniettiamo l'autenticazione nel Security Context reattivo e proseguiamo
+                    return chain.filter(exchange)
+                            .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
+                });
+    }
+
+    /**
+     * Invia al client un errore di tipo 401 (o 403 se preferisci)
+     * con un JSON custom e termina la catena reattiva.
+     */
+    private Mono<Void> sendAuthErrorResponse(ServerWebExchange exchange, String error, String message) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
@@ -109,10 +138,16 @@ public class JwtAuthFilter implements WebFilter {
                 .message(message)
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        return exchange.getResponse().writeWith(Mono.just(exchange.getResponse()
-                .bufferFactory()
-                .wrap(objectMapper.writeValueAsBytes(errorResponse))));
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            byte[] bytes = objectMapper.writeValueAsBytes(errorResponse);
+            return exchange.getResponse().writeWith(Mono.just(
+                    exchange.getResponse().bufferFactory().wrap(bytes)
+            ));
+        } catch (JsonProcessingException e) {
+            // In caso di fallo nella serializzazione, lanciamo un errore più generico
+            return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore interno"));
+        }
     }
 
     private boolean isPublicUrl(String requestURI) {
