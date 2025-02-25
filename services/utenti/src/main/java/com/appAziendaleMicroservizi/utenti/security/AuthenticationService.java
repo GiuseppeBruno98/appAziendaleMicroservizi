@@ -42,8 +42,8 @@ public class AuthenticationService {
     private TokenBlackListClient tokenBlackListClient;
     @Autowired
     private PosizioneLavorativaService posizioneLavorativaService;
-    /*@Autowired
-    private JavaMailSender javaMailSender;*/
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     public AuthenticationResponse register(RegisterRequest request) {
         Utente utente = Utente
@@ -64,8 +64,8 @@ public class AuthenticationService {
         utente.setRegistrationToken(jwtToken);
 
         utenteService.insertUtente(utente);
-        String confirmationUrl = "http://localhost:8080/app/v1/auth/confirm?token=" + utente.getRegistrationToken();
-        //javaMailSender.send(createConfirmationEmail(utente.getEmail(), confirmationUrl));
+        String confirmationUrl = "http://localhost:8222/app/v1/auth/confirm?token=" + utente.getRegistrationToken();
+        javaMailSender.send(createConfirmationEmail(utente.getEmail(), confirmationUrl));
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -90,9 +90,8 @@ public class AuthenticationService {
                 .build();
     }
 
-    /*
+
     private SimpleMailMessage createConfirmationEmail(String email, String confirmationUrl) {
-        return null;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail
         message.setReplyTo("crinq98@gmail.com"); // a chi rispondo se faccio "rispondi"
@@ -101,7 +100,7 @@ public class AuthenticationService {
         message.setText("Ciao! Clicca su questo link per confermare la registrazione! " + confirmationUrl); // il testo!
         return message; // ritorno il messaggio
     }
-
+    /*
     /*private SimpleMailMessage createChangePasswordEmail(String email, String forcePasswordUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail

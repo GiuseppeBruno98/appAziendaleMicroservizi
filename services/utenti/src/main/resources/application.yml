@@ -14,6 +14,17 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+  mail:
+    host: localhost # Se l’app gira in locale e MailDev è su Docker Desktop in ascolto su localhost
+    port: 1025 # Porta SMTP di MailDev
+    username: # Vuoto se non serve autenticazione
+    password: # Vuoto se non serve autenticazione
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
 
 server:
   port: 8070
