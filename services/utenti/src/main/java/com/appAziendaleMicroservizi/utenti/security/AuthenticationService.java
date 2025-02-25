@@ -94,8 +94,8 @@ public class AuthenticationService {
     private SimpleMailMessage createConfirmationEmail(String email, String confirmationUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail
-        message.setReplyTo("crinq98@gmail.com"); // a chi rispondo se faccio "rispondi"
-        message.setFrom("crinq98@gmail.com"); // da chi viene la mail
+        message.setReplyTo("doNotReply@gmail.com"); // a chi rispondo se faccio "rispondi"
+        message.setFrom("doNotReply@gmail.com"); // da chi viene la mail
         message.setSubject("CONFERMA REGISTRAZIONE AppAziendale"); // il TITOLO!
         message.setText("Ciao! Clicca su questo link per confermare la registrazione! " + confirmationUrl); // il testo!
         return message; // ritorno il messaggio
