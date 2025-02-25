@@ -1,6 +1,5 @@
 package com.appAziendaleMicroservizi.api_gateway.configurations;
 
-import com.appAziendaleMicroservizi.api_gateway.domains.dto.responses.UtenteResponse;
 import com.appAziendaleMicroservizi.api_gateway.services.UtenteClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,22 +26,30 @@ public class ApplicationConfig {
 
     @Bean
     public ReactiveUserDetailsService reactiveUserDetailsService() {
-        return username -> Mono.defer(() -> {
-            // Usa Mono.defer o Mono.fromSupplier per creare la pipeline reattiva
-            // (anche se dentro c'è una chiamata sincrona, almeno lo incapsuliamo in un Mono).
-            UtenteResponse utenteResponse = utenteClient.getUtenteResponseByEmail(username);
-            if (utenteResponse == null) {
-                return Mono.error(new UsernameNotFoundException("Utente con email " + username + " non trovato"));
-            }
-            GrantedAuthority authority = new SimpleGrantedAuthority(utenteResponse.ruolo());
-            return Mono.just(
-                    User.builder()
-                            .username(utenteResponse.email())
-                            .password(utenteResponse.password())
-                            .authorities(List.of(authority))
-                            .build()
-            );
-        });
+        return username -> Mono.fromCallable(() -> {
+            // CHIAMATA SINCRONA A FEIGN (BLOCCANTE)
+            // La incapsuliamo in un Callable così da poterla eseguire su un thread dedicato.
+            return utenteClient.getUtenteResponseByEmail(username);
+            })
+            // Sposta l’esecuzione su un thread pool adatto a operazioni bloccanti
+            .subscribeOn(reactor.core.scheduler.Schedulers.boundedElastic())
+
+
+            // Una volta ottenuto utenteResponse, costruiamo l'UserDetails o lanciamo errore
+            .flatMap(utenteResponse -> {
+                if (utenteResponse == null) {
+                    return Mono.error(new UsernameNotFoundException(
+                            "Utente con email " + username + " non trovato"
+                    ));
+                }
+                GrantedAuthority authority = new SimpleGrantedAuthority(utenteResponse.ruolo());
+                UserDetails userDetails = User
+                                            .withUsername(utenteResponse.email())
+                                            .password(utenteResponse.password())
+                                            .authorities(List.of(authority))
+                                            .build();
+                return Mono.just(userDetails);
+            });
     }
 
     @Bean
@@ -57,6 +65,4 @@ public class ApplicationConfig {
         authManager.setPasswordEncoder(passwordEncoder);
         return authManager;
     }
-
-
 }

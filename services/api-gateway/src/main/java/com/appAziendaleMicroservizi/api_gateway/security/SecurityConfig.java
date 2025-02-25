@@ -37,7 +37,6 @@ public class SecurityConfig {
         jwtAuthFilter.setPublicEndpoints(publicEndpoints);
 
         // Configura la sicurezza
-        System.out.println(publicEndpoints);
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)  // Disabilita CSRF se non è necessario
                 .authorizeExchange(exchanges -> {

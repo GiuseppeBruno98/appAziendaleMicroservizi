@@ -16,7 +16,6 @@ public class TokenBlackListController {
 
     @PostMapping("/insert")
     public ResponseEntity<EntityIdResponse> insertToken(@RequestParam Long idUtente, String token){
-        System.out.println("pippo");
         return new ResponseEntity<>(tokenBlackListService.insertToken(idUtente, token), HttpStatus.OK);
     }
 

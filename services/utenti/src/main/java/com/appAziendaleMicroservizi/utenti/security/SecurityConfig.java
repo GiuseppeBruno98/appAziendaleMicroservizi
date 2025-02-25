@@ -20,15 +20,16 @@ public class SecurityConfig {
                 "/app/v1/auth/login",
                 "/app/v1/auth/confirm",
                 "/app/v1/auth/reset_pw",
-                "/app/v1/auth/forcePassword",
-                "/app/v1/utenti/all"
+                "/app/v1/auth/forcePassword"
         );
 
         return http
                 .csrf(AbstractHttpConfigurer::disable) // Disabilita CSRF se non necessario
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(publicEndpoints.toArray(new String [0])).permitAll() // Rendi pubblico
-                        .anyRequest().authenticated() // Tutto il resto richiede autenticazione
+                        .requestMatchers(publicEndpoints.toArray(new String [0]))
+                        .permitAll() // Rendi pubblico
+                        .anyRequest()
+                        .permitAll() // Tutto il resto richiede autenticazione
                 )
                 .build();
     }
