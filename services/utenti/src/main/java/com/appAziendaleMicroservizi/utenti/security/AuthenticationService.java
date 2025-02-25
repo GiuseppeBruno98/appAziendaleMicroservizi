@@ -100,16 +100,16 @@ public class AuthenticationService {
         message.setText("Ciao! Clicca su questo link per confermare la registrazione! " + confirmationUrl); // il testo!
         return message; // ritorno il messaggio
     }
-    /*
-    /*private SimpleMailMessage createChangePasswordEmail(String email, String forcePasswordUrl) {
+
+    private SimpleMailMessage createChangePasswordEmail(String email, String forcePasswordUrl) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email); // a chi mando la mail
-        message.setReplyTo("crinq98@gmail.com"); // a chi rispondo se faccio "rispondi"
-        message.setFrom("crinq98@gmail.com"); // da chi viene la mail
+        message.setReplyTo("doNotReply@gmail.com"); // a chi rispondo se faccio "rispondi"
+        message.setFrom("doNotReply@gmail.com"); // da chi viene la mail
         message.setSubject("CONFERMA IL CAMBIO DELLA PASSWORD per AppAziendale"); // il TITOLO!
         message.setText("Ciao! Clicca su questo link per confermare il cambio della tua password! " + forcePasswordUrl); // il testo!
         return message; // ritorno il messaggio
-    }*/
+    }
 
     public GenericResponse confirmRegistration(String token) {
         Utente utente = utenteService.getByRegistrationToken(token);
@@ -139,7 +139,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    /*public GenericResponse resetPassword(String email, String newPassword){
+    public GenericResponse resetPassword(String email, String newPassword){
         Utente utente= utenteService.getByEmail(email);
         utente.setPassword(newPassword);
         String resetURL = "http://localhost:8080/app/v1/auth/forcePassword?token=" + utente.getRegistrationToken()+"&newPassword="+utente.getPassword();
@@ -165,7 +165,7 @@ public class AuthenticationService {
                 .builder()
                 .message("Password cambiata con successo!")
                 .build();
-    }*/
+    }
 
 
 }

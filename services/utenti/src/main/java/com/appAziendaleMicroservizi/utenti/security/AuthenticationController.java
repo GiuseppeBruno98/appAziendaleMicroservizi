@@ -49,7 +49,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
     }
 
-    /*@PostMapping("/reset_pw")
+    @PostMapping("/reset_pw")
     public ResponseEntity<?> resetPassword(@RequestParam String mail, @RequestParam String newPassword) {
         return new ResponseEntity<>(authenticationService.resetPassword(mail, newPassword), HttpStatus.CREATED);
     }
@@ -61,6 +61,6 @@ public class AuthenticationController {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
-    }*/
+    }
 
 }
