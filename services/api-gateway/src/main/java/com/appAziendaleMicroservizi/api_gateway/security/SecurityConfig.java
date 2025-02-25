@@ -30,7 +30,9 @@ public class SecurityConfig {
                 "/app/v1/auth/reset_pw",
                 "/app/v1/auth/forcePassword",
                 "/app/v1/utenti/all",
-                "/app/v1/timbri/all"
+                "/app/v1/timbri/all",
+                "/app/v1/tokenBlackList/insert",
+                "/app/v1/tokenBlackList/all"
         );
 
         // Imposta i tuoi endpoint pubblici

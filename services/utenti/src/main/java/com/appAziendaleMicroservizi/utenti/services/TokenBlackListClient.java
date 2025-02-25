@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface TokenBlackListClient {
 
     @PostMapping("/insert")
-    EntityIdResponse insertToken(@RequestParam Long idUtente, String token);
+    EntityIdResponse insertToken(@RequestParam Long idUtente,@RequestParam String token);
 
 }

@@ -7,6 +7,8 @@ import com.appAziendaleMicroservizi.api_gateway.repositories.TokenBlackListRepos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TokenBlackListService {
 
@@ -25,6 +27,10 @@ public class TokenBlackListService {
                 .idUtente(id_utente)
                 .build();
         return new EntityIdResponse(tokenBlackListRepository.save(tokenBlackList).getId());
+    }
+
+    public List<TokenBlackList> getAll(){
+        return tokenBlackListRepository.findAll();
     }
 
 }

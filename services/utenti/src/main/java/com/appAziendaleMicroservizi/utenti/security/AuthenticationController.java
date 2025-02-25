@@ -31,7 +31,6 @@ public class AuthenticationController {
 
     @PostMapping("/logout/{utenteId}")
     public ResponseEntity<GenericResponse> logout(@PathVariable Long utenteId, HttpServletRequest request) {
-        System.out.println("ciaooooo");
         String token = request.getHeader("Authorization").substring(7);
         return new ResponseEntity<>(authenticationService.logout(utenteId, token), HttpStatus.CREATED);
     }

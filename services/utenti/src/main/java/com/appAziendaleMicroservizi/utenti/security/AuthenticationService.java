@@ -5,10 +5,12 @@ import com.appAziendaleMicroservizi.utenti.domains.dto.requests.AuthRequest;
 import com.appAziendaleMicroservizi.utenti.domains.dto.requests.ChangePasswordRequest;
 import com.appAziendaleMicroservizi.utenti.domains.dto.requests.RegisterRequest;
 import com.appAziendaleMicroservizi.utenti.domains.dto.responses.AuthenticationResponse;
+import com.appAziendaleMicroservizi.utenti.domains.dto.responses.EntityIdResponse;
 import com.appAziendaleMicroservizi.utenti.domains.dto.responses.ErrorResponse;
 import com.appAziendaleMicroservizi.utenti.domains.dto.responses.GenericResponse;
 import com.appAziendaleMicroservizi.utenti.domains.entities.Utente;
 import com.appAziendaleMicroservizi.utenti.domains.enums.Role;
+import com.appAziendaleMicroservizi.utenti.repositories.UtenteRepository;
 import com.appAziendaleMicroservizi.utenti.services.PosizioneLavorativaService;
 import com.appAziendaleMicroservizi.utenti.services.TokenBlackListClient;
 import com.appAziendaleMicroservizi.utenti.services.UtenteService;
@@ -80,7 +82,8 @@ public class AuthenticationService {
     }
 
     public GenericResponse logout(Long idUtente, String token) {
-        tokenBlackListClient.insertToken(idUtente,token);
+        Utente utente = utenteService.getById(idUtente);
+        EntityIdResponse id= tokenBlackListClient.insertToken(idUtente,token);
         return GenericResponse
                 .builder()
                 .message("Logout effettuato con successo")
